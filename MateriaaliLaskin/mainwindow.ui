@@ -44,7 +44,7 @@
            </widget>
           </item>
           <item row="2" column="0">
-           <widget class="QTableView" name="tableView"/>
+           <widget class="QTableView" name="laskentaTableView"/>
           </item>
           <item row="2" column="1">
            <widget class="QPushButton" name="LaskeButton">
@@ -236,6 +236,22 @@
           </property>
           <property name="text">
            <string>Tietojen muokkaus</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="arvotUpdateTable">
+          <property name="geometry">
+           <rect>
+            <x>320</x>
+            <y>10</y>
+            <width>31</width>
+            <height>24</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset theme="view-refresh"/>
           </property>
          </widget>
         </widget>
