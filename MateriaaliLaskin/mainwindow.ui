@@ -130,7 +130,7 @@
            </rect>
           </property>
          </widget>
-         <widget class="QLineEdit" name="MateriaaliLineEdit">
+         <widget class="QLineEdit" name="arvotMateriaaliLineEdit">
           <property name="geometry">
            <rect>
             <x>80</x>
@@ -140,7 +140,7 @@
            </rect>
           </property>
          </widget>
-         <widget class="QLineEdit" name="hintaLineEdit">
+         <widget class="QLineEdit" name="arvothintaLineEdit">
           <property name="geometry">
            <rect>
             <x>60</x>
@@ -150,7 +150,7 @@
            </rect>
           </property>
          </widget>
-         <widget class="QPushButton" name="updateButton">
+         <widget class="QPushButton" name="arvotUpdateButton">
           <property name="geometry">
            <rect>
             <x>20</x>
@@ -163,7 +163,7 @@
            <string>Update/Save changes</string>
           </property>
          </widget>
-         <widget class="QPushButton" name="addNewButton">
+         <widget class="QPushButton" name="arvotAddNewButton">
           <property name="geometry">
            <rect>
             <x>20</x>
@@ -176,7 +176,7 @@
            <string>Add new</string>
           </property>
          </widget>
-         <widget class="QPushButton" name="deleteButton">
+         <widget class="QPushButton" name="arvotdeleteButton">
           <property name="geometry">
            <rect>
             <x>170</x>
@@ -213,6 +213,29 @@
           </property>
           <property name="text">
            <string>Hinta:</string>
+          </property>
+         </widget>
+         <widget class="QComboBox" name="valuesComboBox">
+          <property name="geometry">
+           <rect>
+            <x>620</x>
+            <y>10</y>
+            <width>21</width>
+            <height>24</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_6">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>30</y>
+            <width>251</width>
+            <height>111</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Tietojen muokkaus</string>
           </property>
          </widget>
         </widget>

@@ -20,15 +20,7 @@ public:
 private slots:
     void on_LaskeButton_clicked();
 
-    void on_updateButton_clicked();
-
-    void on_deleteButton_clicked();
-
-    void on_addNewButton_clicked();
-
-    void on_hintaLineEdit_editingFinished();
-
-    void on_MateriaaliLineEdit_editingFinished();
+    void on_arvotAddNewButton_clicked();
 
 private:
     Ui::MainWindow *ui;

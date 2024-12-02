@@ -8,8 +8,6 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-    dbconnection();
 }
 
 MainWindow::~MainWindow()
@@ -22,33 +20,23 @@ void MainWindow::on_LaskeButton_clicked()
     ui->tabWidget->setCurrentIndex(1);
 }
 
-
-void MainWindow::on_updateButton_clicked()
+// values/arvot page functions
+void MainWindow::on_arvotAddNewButton_clicked()
 {
 
-}
+    QString table, name, value;
+    // add check for which table
+    table = "Lisat";
 
+    name = ui -> arvotMateriaaliLineEdit -> text();
+    value = ui -> arvothintaLineEdit -> text();
 
-void MainWindow::on_deleteButton_clicked()
-{
+    qDebug() << name << value;
 
-}
+    // add checks if data in name and value are correct format etc.
+    dbconnection dbconn;
+    QString result = saveData(dbconn, table, name, value);
 
-
-void MainWindow::on_addNewButton_clicked()
-{
-
-}
-
-
-void MainWindow::on_hintaLineEdit_editingFinished()
-{
-
-}
-
-
-void MainWindow::on_MateriaaliLineEdit_editingFinished()
-{
-
+    ui -> label_6 ->setText(result);
 }
 
