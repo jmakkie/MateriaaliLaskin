@@ -20,6 +20,8 @@ public:
 private slots:
     void on_LaskeButton_clicked();
 
+    void on_arvotAddNewButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
