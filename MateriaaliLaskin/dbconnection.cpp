@@ -1,21 +1,69 @@
 #include "dbconnection.h"
 
-dbconnection::dbconnection() {
-
-    // getting path to database file
-    QString path =QDir::currentPath();
+dbconnection::dbconnection()
+{
+    // setting path to database file
+    path =QDir::currentPath();
     int pos = path.lastIndexOf(QString("/b"));
     path = path.left(pos);
+    path += "/database/MateriaaliLaskindb.db";
 
     // db connecting
     db = QSqlDatabase :: addDatabase("QSQLITE");
-    db.setDatabaseName(path+"/database/MateriaaliLaskindb.db");
+    db.setDatabaseName(path);
     if (db.open()) {
         qDebug() << "db connected";
     }
     else {
         qDebug() << "db NOT connected";
         qDebug() << "Error : " << db.lastError();
+    }
+}
+
+dbconnection::~dbconnection()
+{
+    db.close();
+    QSqlDatabase::removeDatabase(path);
+}
+
+QString dbconnection::getDbpath()
+{
+    return path;
+}
+
+QSqlQueryModel* loadDataToQtableView(dbconnection &dbconn, int index, QString selectedData)
+{
+    // query prep
+    QSqlQueryModel* model = new QSqlQueryModel();
+    QSqlQuery qry;
+    qry.prepare("SELECT * from "+ selectedData +";");
+
+    if (!dbconn.db.isOpen()){
+        qDebug() << "Data loading failed due to database connection";
+        delete model;
+        return nullptr;
+    }
+
+    if(qry.exec()){
+        qDebug() << "Data loaded succesfully from database";
+        model -> setQuery(std::move(qry));
+    } else {
+        qDebug() << "Encountered an error loading data: " << dbconn.db.lastError();
+        delete model;
+        return nullptr;
+    }
+
+    // data loading into window with given index
+    if(index == 0){        // laske
+        delete model;
+        return nullptr;
+    }
+    else if(index == 1){   // historia
+        delete model;
+        return nullptr;
+    }
+    else{                  // arvot
+        return model;
     }
 }
 

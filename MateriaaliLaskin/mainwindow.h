@@ -18,9 +18,17 @@ public:
     ~MainWindow();
 
 private slots:
+    void on_tabWidget_currentChanged(int index);
+
+    // laske/calculate/main window
     void on_LaskeButton_clicked();
 
+    // values/arvot
     void on_arvotAddNewButton_clicked();
+
+    void on_arvotdeleteButton_clicked();
+
+    void on_arvotUpdateButton_clicked();
 
 private:
     Ui::MainWindow *ui;
