@@ -215,12 +215,12 @@
            <string>Hinta:</string>
           </property>
          </widget>
-         <widget class="QComboBox" name="valuesComboBox">
+         <widget class="QComboBox" name="arvotComboBox">
           <property name="geometry">
            <rect>
-            <x>620</x>
+            <x>350</x>
             <y>10</y>
-            <width>21</width>
+            <width>291</width>
             <height>24</height>
            </rect>
           </property>

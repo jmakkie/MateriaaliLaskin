@@ -26,45 +26,65 @@ dbconnection::~dbconnection()
     QSqlDatabase::removeDatabase(path);
 }
 
-QString dbconnection::getDbpath()
+QString dbconnection::getDbpath()// returns path to database
 {
     return path;
 }
 
-QSqlQueryModel* loadDataToQtableView(dbconnection &dbconn, int index, QString selectedData)
+// functions for loading data for application use
+QSqlQueryModel* loadDataToQtableView(dbconnection &dbconn, QString selectedData) //function to get data from selected table and return it as a model
 {
     // query prep
     QSqlQueryModel* model = new QSqlQueryModel();
     QSqlQuery qry;
     qry.prepare("SELECT * from "+ selectedData +";");
 
+    //connection check
     if (!dbconn.db.isOpen()){
         qDebug() << "Data loading failed due to database connection";
         delete model;
         return nullptr;
     }
 
+    // get data from database and place it into the model
     if(qry.exec()){
-        qDebug() << "Data loaded succesfully from database";
+        qDebug() << "table loaded succesfully from database";
         model -> setQuery(std::move(qry));
     } else {
-        qDebug() << "Encountered an error loading data: " << dbconn.db.lastError();
+        qDebug() << "Encountered an error loading table: " << dbconn.db.lastError();
         delete model;
         return nullptr;
     }
 
-    // data loading into window with given index
-    if(index == 0){        // laske
+    return model;
+}
+
+// functions for arvot/values tab
+QSqlQueryModel* loadDataToComboBox(dbconnection &dbconn) //func to get table names from database and return them as a model
+{
+    // query prep
+    QSqlQueryModel* model = new QSqlQueryModel();
+    QSqlQuery qry;
+    qry.prepare("SELECT name FROM sqlite_sequence ORDER BY name ASC;");
+
+    //connection check
+    if (!dbconn.db.isOpen()){
+        qDebug() << "Data loading failed due to database connection";
         delete model;
         return nullptr;
     }
-    else if(index == 1){   // historia
+
+    // get data from database and place it into the model
+    if(qry.exec()){
+        qDebug() << "Table names loaded succesfully from database";
+        model -> setQuery(std::move(qry));
+    } else {
+        qDebug() << "Encountered an error loading table names: " << dbconn.db.lastError();
         delete model;
         return nullptr;
     }
-    else{                  // arvot
-        return model;
-    }
+
+    return model;
 }
 
 QString saveData(dbconnection &dbconn, QString table, QString name, QString value)
@@ -75,11 +95,13 @@ QString saveData(dbconnection &dbconn, QString table, QString name, QString valu
         return "Saving failed due to database connection";
     }
 
+    // query prep
     QSqlQuery qry;
     qry.prepare("INSERT INTO "+ table +" (Pituus, Hinta) VALUES (:name, :value);");
     qry.bindValue(":name", name);
     qry.bindValue(":value", value);
 
+    // query execution
     if(qry.exec()){
         return "Data saved succesfully to database";
     }

@@ -14,7 +14,9 @@ public:
     ~dbconnection();
     QString getDbpath();
 
-    friend QSqlQueryModel* loadDataToQtableView(dbconnection &dbconn, int index, QString selectedData);
+    friend QSqlQueryModel* loadDataToQtableView(dbconnection &dbconn, QString selectedData);
+    friend QSqlQueryModel* loadDataToComboBox(dbconnection &dbconn);
+
     friend QString saveData(dbconnection &dbconn, QString table, QString name, QString value);
     friend QString updateData(dbconnection &dbconn, QString table, QString name, QString value);
 
