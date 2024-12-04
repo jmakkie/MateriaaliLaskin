@@ -18,11 +18,13 @@ public:
     friend QSqlQueryModel* loadDataToQtableView(dbconnection &dbconn, QString selectedData);
     friend QSqlQueryModel* loadDataToComboBox(dbconnection &dbconn);
     friend QString saveData(dbconnection &dbconn, QString table, QString name, QString value);
-    friend QString updateData(dbconnection &dbconn, QString table, QString name, QString value);
+    friend QString updateData(dbconnection &dbconn, QString id, QString table, QString name, QString value);
 
 private:
+
     QSqlDatabase db;
     QString path;
+    int id;
 };
 
 #endif // DBCONNECTION_H

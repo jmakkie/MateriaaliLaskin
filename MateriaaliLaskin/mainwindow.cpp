@@ -28,7 +28,7 @@ void MainWindow::on_LaskeButton_clicked()   // button function for calculating m
 // values/arvot page functions
 void MainWindow::on_tabWidget_currentChanged(int index) // function for loading fresh data entries to tables and listview in which ever tab is selected
 {
-    // sets default data to be loaded. implement index specific default data here?
+    // sets default data to be loaded. implement if statements for checking which tab selected and load specifically those
     QString selectedData = "lisat";
 
     // change dbconn to be a passable/global variable
@@ -107,7 +107,26 @@ void MainWindow::on_arvotdeleteButton_clicked() //button functions for deleting 
 
 void MainWindow::on_arvotUpdateButton_clicked() // button functions for updating entries in databes
 {
-    //implement updating
+    // get data to be used in the database entry
+    QString table, name, value, id;
+    table = dbconnection::getTableByIndex(ui->arvotComboBox->currentIndex());
+    name = ui -> arvotMateriaaliLineEdit -> text();
+    value = ui -> arvothintaLineEdit -> text();
+    id = ui -> arvotIdLabel -> text();
+
+    // add checks if data in name and value are correct format etc.
+
+    // change dbconn to be a passable/global variable
+    dbconnection dbconn;
+
+    // function call for database to create a new entry and display results on a label
+    QString result = updateData(dbconn, id, table, name, value);
+    ui -> label_6 ->setText(result);
+
+    // call functions to provide models
+    QSqlQueryModel* model = loadDataToQtableView(dbconn, table);
+
+    ui->arvotTableView->setModel(model);
 }
 
 

@@ -62,7 +62,7 @@ QSqlQueryModel* loadDataToQtableView(dbconnection &dbconn, QString selectedData)
 
 
 // functions for arvot/values tab
-QString dbconnection::getTableByIndex(int index){
+QString dbconnection::getTableByIndex(int index){ //gets table for sqlite_sequence which has no id
     // set selectedData for query. change to be better later
     QString selectedData = "lisat";
     switch(index)
@@ -141,7 +141,7 @@ QSqlQueryModel* loadDataToComboBox(dbconnection &dbconn) //func to get table nam
     return model;
 }
 
-QString saveData(dbconnection &dbconn, QString table, QString name, QString value)
+QString saveData(dbconnection &dbconn, QString table, QString name, QString value) //func for saving data
 {
     // checks if db was opened correctly (does not check if it is still open, add later)
     if(!dbconn.db.isOpen()){
@@ -151,7 +151,7 @@ QString saveData(dbconnection &dbconn, QString table, QString name, QString valu
 
     // query prep
     QSqlQuery qry;
-    qry.prepare("INSERT INTO "+ table +" (Pituus, Hinta) VALUES (:name, :value);");
+    qry.prepare("INSERT INTO "+ table +" (pituus, hinta) VALUES (:name, :value);");
     qry.bindValue(":name", name);
     qry.bindValue(":value", value);
 
@@ -162,5 +162,31 @@ QString saveData(dbconnection &dbconn, QString table, QString name, QString valu
     else {
         qDebug() << "Error: " << dbconn.db.lastError();
         return "Encountered an error saving data";
+    }
+}
+
+QString updateData(dbconnection &dbconn, QString id, QString table, QString name, QString value)
+{
+    // checks if db was opened correctly (does not check if it is still open, add later)
+    if(!dbconn.db.isOpen()){
+        qDebug() << "Failed to open database";
+        return "Saving failed due to database connection";
+    }
+
+    // query prep
+    QSqlQuery qry;
+    qry.prepare("UPDATE "+ table +" SET pituus = :name, hinta = :value WHERE id = :id;");
+    qry.bindValue(":name", name);
+    qry.bindValue(":value", value);
+    qry.bindValue(":id", id);
+
+    // query execution
+    if(qry.exec()){
+        return "Data updated succesfully";
+    }
+    else {
+        qDebug() << "Error: " << dbconn.db.lastError();
+        qDebug() << qry.executedQuery();
+        return "Encountered an error updating data";
     }
 }
