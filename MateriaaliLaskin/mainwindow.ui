@@ -120,68 +120,12 @@
          <attribute name="toolTip">
           <string>Muuta arvoja laskuille</string>
          </attribute>
-         <widget class="QTableView" name="arvotTableView">
-          <property name="geometry">
-           <rect>
-            <x>320</x>
-            <y>40</y>
-            <width>321</width>
-            <height>401</height>
-           </rect>
-          </property>
-         </widget>
-         <widget class="QLineEdit" name="arvotMateriaaliLineEdit">
-          <property name="geometry">
-           <rect>
-            <x>80</x>
-            <y>160</y>
-            <width>191</width>
-            <height>24</height>
-           </rect>
-          </property>
-         </widget>
-         <widget class="QLineEdit" name="arvothintaLineEdit">
-          <property name="geometry">
-           <rect>
-            <x>60</x>
-            <y>200</y>
-            <width>211</width>
-            <height>24</height>
-           </rect>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="arvotUpdateButton">
-          <property name="geometry">
-           <rect>
-            <x>20</x>
-            <y>310</y>
-            <width>251</width>
-            <height>24</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Update/Save changes</string>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="arvotAddNewButton">
-          <property name="geometry">
-           <rect>
-            <x>20</x>
-            <y>360</y>
-            <width>111</width>
-            <height>24</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Add new</string>
-          </property>
-         </widget>
          <widget class="QPushButton" name="arvotdeleteButton">
           <property name="geometry">
            <rect>
-            <x>170</x>
+            <x>130</x>
             <y>360</y>
-            <width>101</width>
+            <width>80</width>
             <height>24</height>
            </rect>
           </property>
@@ -189,61 +133,104 @@
            <string>Delete</string>
           </property>
          </widget>
+         <widget class="QPushButton" name="arvotAddNewButton">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>360</y>
+            <width>80</width>
+            <height>24</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Add new</string>
+          </property>
+         </widget>
          <widget class="QLabel" name="label_4">
           <property name="geometry">
            <rect>
-            <x>20</x>
-            <y>160</y>
-            <width>61</width>
-            <height>21</height>
+            <x>10</x>
+            <y>150</y>
+            <width>55</width>
+            <height>16</height>
            </rect>
           </property>
           <property name="text">
            <string>Materiaali:</string>
           </property>
          </widget>
+         <widget class="QTableView" name="arvotTableView">
+          <property name="geometry">
+           <rect>
+            <x>264</x>
+            <y>39</y>
+            <width>381</width>
+            <height>404</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="arvotMateriaaliLineEdit">
+          <property name="geometry">
+           <rect>
+            <x>70</x>
+            <y>150</y>
+            <width>131</width>
+            <height>24</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="arvothintaLineEdit">
+          <property name="geometry">
+           <rect>
+            <x>50</x>
+            <y>180</y>
+            <width>151</width>
+            <height>24</height>
+           </rect>
+          </property>
+         </widget>
          <widget class="QLabel" name="label_5">
           <property name="geometry">
            <rect>
-            <x>20</x>
-            <y>200</y>
-            <width>51</width>
-            <height>21</height>
+            <x>10</x>
+            <y>180</y>
+            <width>32</width>
+            <height>16</height>
            </rect>
           </property>
           <property name="text">
            <string>Hinta:</string>
           </property>
          </widget>
-         <widget class="QComboBox" name="arvotComboBox">
+         <widget class="QPushButton" name="arvotUpdateButton">
           <property name="geometry">
            <rect>
-            <x>350</x>
-            <y>10</y>
-            <width>291</width>
+            <x>10</x>
+            <y>330</y>
+            <width>201</width>
             <height>24</height>
            </rect>
           </property>
+          <property name="text">
+           <string>Update/Save changes</string>
+          </property>
          </widget>
-         <widget class="QLabel" name="label_6">
+         <widget class="QComboBox" name="arvotComboBox">
           <property name="geometry">
            <rect>
-            <x>20</x>
-            <y>30</y>
-            <width>251</width>
-            <height>111</height>
+            <x>301</x>
+            <y>10</y>
+            <width>341</width>
+            <height>24</height>
            </rect>
-          </property>
-          <property name="text">
-           <string>Tietojen muokkaus</string>
           </property>
          </widget>
          <widget class="QPushButton" name="arvotUpdateTable">
           <property name="geometry">
            <rect>
-            <x>320</x>
+            <x>270</x>
             <y>10</y>
-            <width>31</width>
+            <width>28</width>
             <height>24</height>
            </rect>
           </property>
@@ -252,6 +239,45 @@
           </property>
           <property name="icon">
            <iconset theme="view-refresh"/>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_6">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>25</y>
+            <width>100</width>
+            <height>81</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Tietojen muokkaus</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_7">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>110</y>
+            <width>16</width>
+            <height>16</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>id:</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="arvotIdLabel">
+          <property name="geometry">
+           <rect>
+            <x>40</x>
+            <y>110</y>
+            <width>49</width>
+            <height>16</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>null</string>
           </property>
          </widget>
         </widget>

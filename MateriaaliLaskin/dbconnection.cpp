@@ -31,7 +31,7 @@ QString dbconnection::getDbpath()// returns path to database
     return path;
 }
 
-// functions for loading data for application use
+// functions for loading data for application use.
 QSqlQueryModel* loadDataToQtableView(dbconnection &dbconn, QString selectedData) //function to get data from selected table and return it as a model
 {
     // query prep
@@ -59,7 +59,61 @@ QSqlQueryModel* loadDataToQtableView(dbconnection &dbconn, QString selectedData)
     return model;
 }
 
+
+
 // functions for arvot/values tab
+QString dbconnection::getTableByIndex(int index){ //gets table for sqlite_sequence which has no id
+    // set selectedData for query. change to be better later
+    QString selectedData = "lisat";
+    switch(index)
+    {
+    case 0:
+        selectedData = "kourut";
+        break;
+    case 1:
+        selectedData = "kourut_3cm_muovi";
+        break;
+    case 2:
+        selectedData = "kourut_4cm_muovi";
+        break;
+    case 3:
+        selectedData = "kourut_5cm_muovi";
+        break;
+    case 4:
+        selectedData = "kumi_13mm";
+        break;
+    case 5:
+        selectedData = "kumi_19mm";
+        break;
+    case 6:
+        selectedData = "kumitus_iv_huone";
+        break;
+    case 7:
+        selectedData = "kumitus_letkulla";
+        break;
+    case 8:
+        selectedData = "lisat";
+        break;
+    case 9:
+        selectedData = "muut";
+        break;
+    case 10:
+        selectedData = "t_haarat_3cm";
+        break;
+    case 11:
+        selectedData = "t_haarat_4cm";
+        break;
+    case 12:
+        selectedData = "t_haarat_5cm";
+        break;
+    case 13:
+        selectedData = "tuuletukset";
+        break;
+    };
+
+    return selectedData;
+}
+
 QSqlQueryModel* loadDataToComboBox(dbconnection &dbconn) //func to get table names from database and return them as a model
 {
     // query prep
@@ -87,7 +141,7 @@ QSqlQueryModel* loadDataToComboBox(dbconnection &dbconn) //func to get table nam
     return model;
 }
 
-QString saveData(dbconnection &dbconn, QString table, QString name, QString value)
+QString saveData(dbconnection &dbconn, QString table, QString name, QString value) //func for saving data
 {
     // checks if db was opened correctly (does not check if it is still open, add later)
     if(!dbconn.db.isOpen()){
@@ -97,7 +151,7 @@ QString saveData(dbconnection &dbconn, QString table, QString name, QString valu
 
     // query prep
     QSqlQuery qry;
-    qry.prepare("INSERT INTO "+ table +" (Pituus, Hinta) VALUES (:name, :value);");
+    qry.prepare("INSERT INTO "+ table +" (pituus, hinta) VALUES (:name, :value);");
     qry.bindValue(":name", name);
     qry.bindValue(":value", value);
 
@@ -108,5 +162,31 @@ QString saveData(dbconnection &dbconn, QString table, QString name, QString valu
     else {
         qDebug() << "Error: " << dbconn.db.lastError();
         return "Encountered an error saving data";
+    }
+}
+
+QString updateData(dbconnection &dbconn, QString id, QString table, QString name, QString value)
+{
+    // checks if db was opened correctly (does not check if it is still open, add later)
+    if(!dbconn.db.isOpen()){
+        qDebug() << "Failed to open database";
+        return "Saving failed due to database connection";
+    }
+
+    // query prep
+    QSqlQuery qry;
+    qry.prepare("UPDATE "+ table +" SET pituus = :name, hinta = :value WHERE id = :id;");
+    qry.bindValue(":name", name);
+    qry.bindValue(":value", value);
+    qry.bindValue(":id", id);
+
+    // query execution
+    if(qry.exec()){
+        return "Data updated succesfully";
+    }
+    else {
+        qDebug() << "Error: " << dbconn.db.lastError();
+        qDebug() << qry.executedQuery();
+        return "Encountered an error updating data";
     }
 }
