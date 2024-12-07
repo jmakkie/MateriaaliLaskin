@@ -52,6 +52,7 @@ QSqlQueryModel* loadDataToQtableView(dbconnection &dbconn, QString selectedData)
         model -> setQuery(std::move(qry));
     } else {
         qDebug() << "Encountered an error loading table: " << dbconn.db.lastError();
+        qDebug() << qry.executedQuery();
         delete model;
         return nullptr;
     }
@@ -134,6 +135,7 @@ QSqlQueryModel* loadDataToComboBox(dbconnection &dbconn) //func to get table nam
         model -> setQuery(std::move(qry));
     } else {
         qDebug() << "Encountered an error loading table names: " << dbconn.db.lastError();
+        qDebug() << qry.executedQuery();
         delete model;
         return nullptr;
     }
@@ -161,6 +163,7 @@ QString saveData(dbconnection &dbconn, QString table, QString name, QString valu
     }
     else {
         qDebug() << "Error: " << dbconn.db.lastError();
+        qDebug() << qry.executedQuery();
         return "Encountered an error saving data";
     }
 }
@@ -175,7 +178,7 @@ QString updateData(dbconnection &dbconn, QString id, QString table, QString name
 
     // query prep
     QSqlQuery qry;
-    qry.prepare("UPDATE "+ table +" SET pituus = :name, hinta = :value WHERE id = :id;");
+    qry.prepare("UPDATE "+ table +" SET pituus = :name, hinta = :value WHERE id = :id ;");
     qry.bindValue(":name", name);
     qry.bindValue(":value", value);
     qry.bindValue(":id", id);
@@ -188,5 +191,29 @@ QString updateData(dbconnection &dbconn, QString id, QString table, QString name
         qDebug() << "Error: " << dbconn.db.lastError();
         qDebug() << qry.executedQuery();
         return "Encountered an error updating data";
+    }
+}
+
+QString deleteData(dbconnection &dbconn, QString id, QString table)
+{
+    // checks if db was opened correctly (does not check if it is still open, add later)
+    if(!dbconn.db.isOpen()){
+        qDebug() << "Failed to open database";
+        return "Saving failed due to database connection";
+    }
+
+    // query prep
+    QSqlQuery qry;
+    qry.prepare("DELETE FROM "+ table +" WHERE id = "+ id +";");
+    //qry.bindValue(":id", id);
+
+    // query execution
+    if(qry.exec()){
+        return "Data deleted succesfully";
+    }
+    else {
+        qDebug() << "Error: " << dbconn.db.lastError();
+        qDebug() << qry.executedQuery();
+        return "Encountered an error deleting data";
     }
 }

@@ -15,15 +15,12 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
 // laske/calculate/mainwindow
 void MainWindow::on_LaskeButton_clicked()   // button function for calculating material costs
 {
     //implement big maths here
     ui->tabWidget->setCurrentIndex(1);
 }
-
-
 
 // values/arvot page functions
 void MainWindow::on_tabWidget_currentChanged(int index) // function for loading fresh data entries to tables and listview in which ever tab is selected
@@ -64,8 +61,6 @@ void MainWindow::on_arvotTableView_activated(const QModelIndex &index) // functi
     ui -> arvotIdLabel -> setText(id);
     ui ->arvotMateriaaliLineEdit -> setText(length);
     ui ->arvothintaLineEdit ->setText(price);
-
-
 }
 
 void MainWindow::on_arvotComboBox_currentIndexChanged(int index) // function for loading data for selected table
@@ -97,13 +92,32 @@ void MainWindow::on_arvotAddNewButton_clicked() // button function for adding ne
     // function call for database to create a new entry and display results on a label
     QString result = saveData(dbconn, table, name, value);
     ui -> label_6 ->setText(result);
+
+    // call functions to provide models
+    QSqlQueryModel* model = loadDataToQtableView(dbconn, table);
+    ui->arvotTableView->setModel(model);
 }
 
 void MainWindow::on_arvotdeleteButton_clicked() //button functions for deleting entries from database
 {
-    //implement delete
-}
+    // get data to be used in the database entry
+    QString table, id;
+    table = dbconnection::getTableByIndex(ui->arvotComboBox->currentIndex());
+    id = ui -> arvotIdLabel -> text();
 
+    // add checks if data in name and value are correct format etc.
+
+    // change dbconn to be a passable/global variable
+    dbconnection dbconn;
+
+    // function call for database to create a new entry and display results on a label
+    QString result = deleteData(dbconn, id, table);
+    ui -> label_6 ->setText(result);
+
+    // call functions to provide models
+    QSqlQueryModel* model = loadDataToQtableView(dbconn, table);
+    ui->arvotTableView->setModel(model);
+}
 
 void MainWindow::on_arvotUpdateButton_clicked() // button functions for updating entries in databes
 {
@@ -125,8 +139,20 @@ void MainWindow::on_arvotUpdateButton_clicked() // button functions for updating
 
     // call functions to provide models
     QSqlQueryModel* model = loadDataToQtableView(dbconn, table);
-
     ui->arvotTableView->setModel(model);
 }
 
+void MainWindow::on_arvotUpdateTable_clicked() //funtion for update table
+{
+    // gets currently loaded table
+    QString table, id;
+    table = dbconnection::getTableByIndex(ui->arvotComboBox->currentIndex());
+
+    // change dbconn to be a passable/global variable
+    dbconnection dbconn;
+
+    // call functions to provide models
+    QSqlQueryModel* model = loadDataToQtableView(dbconn, table);
+    ui->arvotTableView->setModel(model);
+}
 
