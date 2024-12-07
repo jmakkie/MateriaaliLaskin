@@ -36,6 +36,8 @@ private slots:
 
     void on_arvotTableView_activated(const QModelIndex &index);
 
+    void on_arvotUpdateTable_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

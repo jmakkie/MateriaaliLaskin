@@ -19,6 +19,7 @@ public:
     friend QSqlQueryModel* loadDataToComboBox(dbconnection &dbconn);
     friend QString saveData(dbconnection &dbconn, QString table, QString name, QString value);
     friend QString updateData(dbconnection &dbconn, QString id, QString table, QString name, QString value);
+    friend QString deleteData(dbconnection &dbconn, QString id, QString table);
 
 private:
 
