@@ -31,7 +31,7 @@ QString dbconnection::getDbpath()// returns path to database
     return path;
 }
 
-// functions for loading data for application use.
+// functions for application use.
 QSqlQueryModel* loadDataToQtableView(dbconnection &dbconn, QString selectedData) //function to get data from selected table and return it as a model
 {
     // query prep
@@ -60,9 +60,34 @@ QSqlQueryModel* loadDataToQtableView(dbconnection &dbconn, QString selectedData)
     return model;
 }
 
+QSqlQueryModel* loadDataToComboBox(dbconnection &dbconn) //func to get table names from database and return them as a model
+{
+    // query prep
+    QSqlQueryModel* model = new QSqlQueryModel();
+    QSqlQuery qry;
+    qry.prepare("SELECT name FROM sqlite_sequence ORDER BY name ASC;");
 
+    //connection check
+    if (!dbconn.db.isOpen()){
+        qDebug() << "Data loading failed due to database connection";
+        delete model;
+        return nullptr;
+    }
 
-// functions for arvot/values tab
+    // get data from database and place it into the model
+    if(qry.exec()){
+        qDebug() << "Table for comboBox loaded succesfully from database";
+        model -> setQuery(std::move(qry));
+    } else {
+        qDebug() << "Encountered an error loading table names: " << dbconn.db.lastError();
+        qDebug() << qry.executedQuery();
+        delete model;
+        return nullptr;
+    }
+
+    return model;
+}
+
 QString dbconnection::getTableByIndex(int index){ //gets table for sqlite_sequence which has no id
     // set selectedData for query. change to be better later
     QString selectedData = "lisat";
@@ -115,35 +140,8 @@ QString dbconnection::getTableByIndex(int index){ //gets table for sqlite_sequen
     return selectedData;
 }
 
-QSqlQueryModel* loadDataToComboBox(dbconnection &dbconn) //func to get table names from database and return them as a model
-{
-    // query prep
-    QSqlQueryModel* model = new QSqlQueryModel();
-    QSqlQuery qry;
-    qry.prepare("SELECT name FROM sqlite_sequence ORDER BY name ASC;");
-
-    //connection check
-    if (!dbconn.db.isOpen()){
-        qDebug() << "Data loading failed due to database connection";
-        delete model;
-        return nullptr;
-    }
-
-    // get data from database and place it into the model
-    if(qry.exec()){
-        qDebug() << "Table names loaded succesfully from database";
-        model -> setQuery(std::move(qry));
-    } else {
-        qDebug() << "Encountered an error loading table names: " << dbconn.db.lastError();
-        qDebug() << qry.executedQuery();
-        delete model;
-        return nullptr;
-    }
-
-    return model;
-}
-
-QString saveData(dbconnection &dbconn, QString table, QString name, QString value) //func for saving data
+// functions for arvot/values tab
+QString saveData(dbconnection &dbconn, QString table, QString name, QString value) //func for saving data in database
 {
     // checks if db was opened correctly (does not check if it is still open, add later)
     if(!dbconn.db.isOpen()){
@@ -168,7 +166,7 @@ QString saveData(dbconnection &dbconn, QString table, QString name, QString valu
     }
 }
 
-QString updateData(dbconnection &dbconn, QString id, QString table, QString name, QString value)
+QString updateData(dbconnection &dbconn, QString id, QString table, QString name, QString value) //function for updating data in database
 {
     // checks if db was opened correctly (does not check if it is still open, add later)
     if(!dbconn.db.isOpen()){
@@ -194,7 +192,7 @@ QString updateData(dbconnection &dbconn, QString id, QString table, QString name
     }
 }
 
-QString deleteData(dbconnection &dbconn, QString id, QString table)
+QString deleteData(dbconnection &dbconn, QString id, QString table) //function for data deletion in database
 {
     // checks if db was opened correctly (does not check if it is still open, add later)
     if(!dbconn.db.isOpen()){

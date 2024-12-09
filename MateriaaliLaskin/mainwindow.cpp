@@ -1,18 +1,53 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
 #include "dbconnection.h"
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    //loads data to tables when first opening the application
+    firstOpen();
+
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+// functions for application use
+void MainWindow::firstOpen(){
+    // sets default data to be loaded. implement if statements for checking which tab selected and load specifically those
+    QString selectedData = "lisat";
+
+    // call functions to provide models
+    QSqlQueryModel* model = loadDataToQtableView(dbconn, selectedData);
+    QSqlQueryModel* model2 = loadDataToComboBox(dbconn);
+
+    ui->laskentaMaterialsTableView->setModel(model);
+    ui->LaskentaComboBox->setModel(model2);
+}
+
+void MainWindow::comboBoxFunction(int comboIndex, int pageIndex){
+
+    qDebug() << comboIndex << pageIndex;
+
+
+    QString selectedData = dbconnection::getTableByIndex(comboIndex);
+
+    // query and model to show
+    QSqlQueryModel* model = loadDataToQtableView(dbconn, selectedData);
+    if(pageIndex == 0){
+        ui ->laskentaMaterialsTableView->setModel(model);
+    }
+
+    if(pageIndex == 2){
+        ui ->arvotTableView->setModel(model);
+    }
 }
 
 // laske/calculate/mainwindow
@@ -23,17 +58,32 @@ void MainWindow::on_LaskeButton_clicked()   // button function for calculating m
 }
 
 // values/arvot page functions
+void MainWindow::on_LaskentaComboBox_activated(int index)
+{
+    comboBoxFunction(index, 0);
+}
+
 void MainWindow::on_tabWidget_currentChanged(int index) // function for loading fresh data entries to tables and listview in which ever tab is selected
 {
     // sets default data to be loaded. implement if statements for checking which tab selected and load specifically those
     QString selectedData = "lisat";
 
     // change dbconn to be a passable/global variable
-    dbconnection dbconn;
+    //dbconnection dbconn;
 
     // call functions to provide models
     QSqlQueryModel* model = loadDataToQtableView(dbconn, selectedData);
     QSqlQueryModel* model2 = loadDataToComboBox(dbconn);
+    qDebug() << index;
+
+    if(index == 0){
+        ui->laskentaMaterialsTableView->setModel(model);
+        ui->LaskentaComboBox->setModel(model2);
+    }
+
+    if(index == 1){
+        //put stuff here
+    }
 
     if(index == 2){
         ui->arvotTableView->setModel(model);
@@ -65,12 +115,7 @@ void MainWindow::on_arvotTableView_activated(const QModelIndex &index) // functi
 
 void MainWindow::on_arvotComboBox_currentIndexChanged(int index) // function for loading data for selected table
 {
-    dbconnection dbconn;
-    QString selectedData = dbconnection::getTableByIndex(index);
-
-    // query and model to show
-    QSqlQueryModel* model = loadDataToQtableView(dbconn, selectedData);
-    ui ->arvotTableView->setModel(model);
+    comboBoxFunction(index, 2);
 }
 
 void MainWindow::on_arvotAddNewButton_clicked() // button function for adding new entries to database
@@ -87,7 +132,7 @@ void MainWindow::on_arvotAddNewButton_clicked() // button function for adding ne
     // add checks if data in name and value are correct format etc.
 
     // change dbconn to be a passable/global variable
-    dbconnection dbconn;
+    //dbconnection dbconn;
 
     // function call for database to create a new entry and display results on a label
     QString result = saveData(dbconn, table, name, value);
@@ -108,7 +153,7 @@ void MainWindow::on_arvotdeleteButton_clicked() //button functions for deleting 
     // add checks if data in name and value are correct format etc.
 
     // change dbconn to be a passable/global variable
-    dbconnection dbconn;
+    //dbconnection dbconn;
 
     // function call for database to create a new entry and display results on a label
     QString result = deleteData(dbconn, id, table);
@@ -131,7 +176,7 @@ void MainWindow::on_arvotUpdateButton_clicked() // button functions for updating
     // add checks if data in name and value are correct format etc.
 
     // change dbconn to be a passable/global variable
-    dbconnection dbconn;
+    //dbconnection dbconn;
 
     // function call for database to create a new entry and display results on a label
     QString result = updateData(dbconn, id, table, name, value);
@@ -149,10 +194,11 @@ void MainWindow::on_arvotUpdateTable_clicked() //funtion for update table
     table = dbconnection::getTableByIndex(ui->arvotComboBox->currentIndex());
 
     // change dbconn to be a passable/global variable
-    dbconnection dbconn;
+    //dbconnection dbconn;
 
     // call functions to provide models
     QSqlQueryModel* model = loadDataToQtableView(dbconn, table);
     ui->arvotTableView->setModel(model);
 }
+
 
