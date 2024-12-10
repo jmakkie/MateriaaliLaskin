@@ -3,11 +3,15 @@
 
 #include <QMainWindow>
 
+#include "dbconnection.h"
+#include "addedmaterial.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
 }
 QT_END_NAMESPACE
+
 
 class MainWindow : public QMainWindow
 {
@@ -17,28 +21,40 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    // functions for laske/calculate/main window
 private slots:
+    // functions for application use
     void on_tabWidget_currentChanged(int index);
 
-    // laske/calculate/main window
+    // for laske/calculate/main window
     void on_LaskeButton_clicked();
+    void on_LaskentaComboBox_activated(int index);
+    void on_laskentaMaterialsTableView_activated(const QModelIndex &index);
+    void on_laskentaLisatComboBox_activated(int index);
 
-    // values/arvot
+    // for values/arvot
     void on_arvotComboBox_currentIndexChanged(int index);
-
-    void on_arvotAddNewButton_clicked();
-
-    void on_arvotdeleteButton_clicked();
-
-    void on_arvotUpdateButton_clicked();
-
-
-
     void on_arvotTableView_activated(const QModelIndex &index);
-
+    void on_arvotAddNewButton_clicked();
+    void on_arvotdeleteButton_clicked();
+    void on_arvotUpdateButton_clicked();
     void on_arvotUpdateTable_clicked();
+
+
+    void on_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;
+    dbconnection dbconn;
+    QVector<addedmaterial*> materials; //container to store material objects
+
+    //functions for application use
+    void firstOpen();
+    void comboBoxFunction(int comboIndex, int pageIndex);
+
+    //functions for laske/calculate/mainwindow
+    void updateLaskentaAddedTableView();
+
+
 };
 #endif // MAINWINDOW_H
