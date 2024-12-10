@@ -140,6 +140,62 @@ QString dbconnection::getTableByIndex(int index){ //gets table for sqlite_sequen
     return selectedData;
 }
 
+// functions for laskenta tab
+QString loadLisaValue(dbconnection &dbconn, QString name){
+    QSqlQuery qry;
+    qry.prepare("SELECT hinta FROM lisat WHERE pituus = :name ;");
+    qry.bindValue(":name", name);
+
+    //connection check
+    if (!dbconn.db.isOpen()){
+        qDebug() << "Loading price of selected lisa failed due to database connection";
+        qDebug() << qry.executedQuery();
+        return "Error";
+    }
+
+    QString result;
+    // get data from database and place it into the model
+    if(qry.exec()){
+        qDebug() << "Table for lisat comboBox loaded succesfully from database";
+        while (qry.next()) {
+            result = qry.value(0).toString();
+        }
+        return result;
+    } else {
+        qDebug() << "Encountered an error loading price of lisa: " << dbconn.db.lastError();
+        qDebug() << qry.executedQuery();
+        return "Error";
+    }
+}
+
+QSqlQueryModel* loadLisatDataToComboBox(dbconnection &dbconn)
+{
+    // query prep
+    QSqlQueryModel* model = new QSqlQueryModel();
+    QSqlQuery qry;
+    qry.prepare("SELECT pituus FROM lisat ORDER BY pituus ASC;");
+
+    //connection check
+    if (!dbconn.db.isOpen()){
+        qDebug() << "Data loading failed due to database connection";
+        delete model;
+        return nullptr;
+    }
+
+    // get data from database and place it into the model
+    if(qry.exec()){
+        qDebug() << "Table for lisat comboBox loaded succesfully from database";
+        model -> setQuery(std::move(qry));
+    } else {
+        qDebug() << "Encountered an error loading table names: " << dbconn.db.lastError();
+        qDebug() << qry.executedQuery();
+        delete model;
+        return nullptr;
+    }
+
+    return model;
+}
+
 // functions for arvot/values tab
 QString saveData(dbconnection &dbconn, QString table, QString name, QString value) //func for saving data in database
 {

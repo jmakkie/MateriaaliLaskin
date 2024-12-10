@@ -24,19 +24,19 @@ void MainWindow::firstOpen(){
     // sets default data to be loaded. implement if statements for checking which tab selected and load specifically those
     QString selectedData = "lisat";
 
+    //make lisat not be avaliable on laskenta
+
     // call functions to provide models
     QSqlQueryModel* model = loadDataToQtableView(dbconn, selectedData);
     QSqlQueryModel* model2 = loadDataToComboBox(dbconn);
+    QSqlQueryModel* model3 = loadLisatDataToComboBox(dbconn);
 
     ui->laskentaMaterialsTableView->setModel(model);
     ui->LaskentaComboBox->setModel(model2);
+    ui -> laskentaLisatComboBox->setModel(model3);
 }
 
 void MainWindow::comboBoxFunction(int comboIndex, int pageIndex){
-
-    qDebug() << comboIndex << pageIndex;
-
-
     QString selectedData = dbconnection::getTableByIndex(comboIndex);
 
     // query and model to show
@@ -51,6 +51,10 @@ void MainWindow::comboBoxFunction(int comboIndex, int pageIndex){
 }
 
 // laske/calculate/mainwindow
+void MainWindow::updateLaskentaAddedTableView(){
+
+}
+
 void MainWindow::on_LaskeButton_clicked()   // button function for calculating material costs
 {
     //implement big maths here
@@ -74,7 +78,6 @@ void MainWindow::on_tabWidget_currentChanged(int index) // function for loading 
     // call functions to provide models
     QSqlQueryModel* model = loadDataToQtableView(dbconn, selectedData);
     QSqlQueryModel* model2 = loadDataToComboBox(dbconn);
-    qDebug() << index;
 
     if(index == 0){
         ui->laskentaMaterialsTableView->setModel(model);
@@ -202,3 +205,59 @@ void MainWindow::on_arvotUpdateTable_clicked() //funtion for update table
 }
 
 
+
+void MainWindow::on_laskentaMaterialsTableView_activated(const QModelIndex &index)
+{
+    // use index to get row of table
+    int selectedRow = index.row();
+    QAbstractItemModel *model = ui -> laskentaMaterialsTableView -> model();
+
+    // pull data from said row
+    QVariant variantLength = model -> data(model -> index(selectedRow, 1));
+    QVariant variantPrice = model -> data(model -> index(selectedRow, 2));
+    QString length = variantLength.toString();
+    QString price = variantPrice.toString();
+
+    // todo (again..) fucking , and .
+
+    // slap that data to screen
+    ui ->laskentaLengthLineEdit -> setText(length);
+    ui ->laskentaPriceLineEdit ->setText(price);
+}
+
+
+void MainWindow::on_laskentaLisatComboBox_activated(int index)
+{
+    QString selectedData = ui -> laskentaLisatComboBox ->currentText();
+    QString result = loadLisaValue(dbconn, selectedData);
+    ui -> laskentaExtraLineEdit ->setText(result);
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    // get ddata from form fields
+    QString name = ui -> laskentaProductLabel ->text();
+    QString length = ui ->laskentaLengthLineEdit -> text();
+    QString priceString = ui ->laskentaLengthLineEdit -> text();
+    double price = priceString.toDouble();
+    QString amountString = ui -> laskentaAmountlineEdit -> text();
+    double amount = amountString.toDouble();
+    QString lisaName = ui ->laskentaLengthLineEdit -> text();
+    QString lisaValueString = ui ->laskentaLengthLineEdit -> text();
+    double lisaValue = lisaValueString.toDouble();
+
+    //creating a new object and adding it to the vector
+    addedmaterial* newMaterial = new addedmaterial(name, length, price, amount, lisaName, lisaValue);
+    materials.append(newMaterial);
+
+    qDebug() << "New material added";
+
+    // clear fields
+    ui -> laskentaProductLabel -> clear();
+    ui -> laskentaLengthLineEdit -> clear();
+    ui -> laskentaAmountlineEdit -> clear();
+    ui -> laskentaExtraLineEdit -> clear();
+    ui -> laskentaPriceLineEdit -> clear();
+
+    updateLaskentaAddedTableView();
+}
