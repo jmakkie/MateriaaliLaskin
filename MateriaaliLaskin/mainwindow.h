@@ -2,9 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
 #include "dbconnection.h"
 #include "addedmaterial.h"
+#include "materialtablemodel.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -39,14 +39,13 @@ private slots:
     void on_arvotdeleteButton_clicked();
     void on_arvotUpdateButton_clicked();
     void on_arvotUpdateTable_clicked();
-
-
     void on_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;
     dbconnection dbconn;
-    QVector<addedmaterial*> materials; //container to store material objects
+    QVector<addedmaterial*> materials;
+    materialtablemodel *materialTableModel;
 
     //functions for application use
     void firstOpen();
