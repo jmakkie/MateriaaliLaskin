@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "dbconnection.h"
+#include "addedmaterial.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -8,6 +9,10 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    //sets laskentaAddedTableView to use custom model
+    materialTableModel = new materialtablemodel(&materials, this);
+    ui ->laskentaAddedtableView -> setModel(materialTableModel);
 
     //loads data to tables when first opening the application
     firstOpen();
@@ -17,12 +22,17 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+
+    // clean up classes
+    for (addedmaterial* material : materials){
+        delete material;
+    }
 }
 
 // functions for application use
 void MainWindow::firstOpen(){
     // sets default data to be loaded. implement if statements for checking which tab selected and load specifically those
-    QString selectedData = "lisat";
+    QString selectedData = "kourut";
 
     //make lisat not be avaliable on laskenta
 
@@ -126,7 +136,9 @@ void MainWindow::on_arvotAddNewButton_clicked() // button function for adding ne
     QString table, name, value;
 
     // add check for which table from selected in the qtableview?
-    table = "Lisat";
+    table = ui -> arvotComboBox ->currentText();
+
+    qDebug() << table;
 
     // get data to be used in the database entry
     name = ui -> arvotMateriaaliLineEdit -> text();
@@ -144,6 +156,10 @@ void MainWindow::on_arvotAddNewButton_clicked() // button function for adding ne
     // call functions to provide models
     QSqlQueryModel* model = loadDataToQtableView(dbconn, table);
     ui->arvotTableView->setModel(model);
+
+    ui-> arvotIdLabel -> clear();
+    ui -> arvotMateriaaliLineEdit -> clear();
+    ui-> arvothintaLineEdit ->clear();
 }
 
 void MainWindow::on_arvotdeleteButton_clicked() //button functions for deleting entries from database
@@ -165,6 +181,10 @@ void MainWindow::on_arvotdeleteButton_clicked() //button functions for deleting 
     // call functions to provide models
     QSqlQueryModel* model = loadDataToQtableView(dbconn, table);
     ui->arvotTableView->setModel(model);
+
+    ui-> arvotIdLabel -> clear();
+    ui -> arvotMateriaaliLineEdit -> clear();
+    ui-> arvothintaLineEdit ->clear();
 }
 
 void MainWindow::on_arvotUpdateButton_clicked() // button functions for updating entries in databes
@@ -188,6 +208,10 @@ void MainWindow::on_arvotUpdateButton_clicked() // button functions for updating
     // call functions to provide models
     QSqlQueryModel* model = loadDataToQtableView(dbconn, table);
     ui->arvotTableView->setModel(model);
+
+    ui-> arvotIdLabel -> clear();
+    ui -> arvotMateriaaliLineEdit -> clear();
+    ui-> arvothintaLineEdit ->clear();
 }
 
 void MainWindow::on_arvotUpdateTable_clicked() //funtion for update table
@@ -213,6 +237,7 @@ void MainWindow::on_laskentaMaterialsTableView_activated(const QModelIndex &inde
     QAbstractItemModel *model = ui -> laskentaMaterialsTableView -> model();
 
     // pull data from said row
+    QString name = ui -> LaskentaComboBox -> currentText();
     QVariant variantLength = model -> data(model -> index(selectedRow, 1));
     QVariant variantPrice = model -> data(model -> index(selectedRow, 2));
     QString length = variantLength.toString();
@@ -221,8 +246,9 @@ void MainWindow::on_laskentaMaterialsTableView_activated(const QModelIndex &inde
     // todo (again..) fucking , and .
 
     // slap that data to screen
-    ui ->laskentaLengthLineEdit -> setText(length);
-    ui ->laskentaPriceLineEdit ->setText(price);
+    ui -> laskentaProductLabel -> setText(name);
+    ui -> laskentaLengthLineEdit -> setText(length);
+    ui -> laskentaPriceLineEdit ->setText(price);
 }
 
 
@@ -233,22 +259,24 @@ void MainWindow::on_laskentaLisatComboBox_activated(int index)
     ui -> laskentaExtraLineEdit ->setText(result);
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_pushButton_clicked() // button for adding a new material
 {
     // get ddata from form fields
     QString name = ui -> laskentaProductLabel ->text();
     QString length = ui ->laskentaLengthLineEdit -> text();
-    QString priceString = ui ->laskentaLengthLineEdit -> text();
+    QString priceString = ui ->laskentaPriceLineEdit -> text();
     double price = priceString.toDouble();
     QString amountString = ui -> laskentaAmountlineEdit -> text();
     double amount = amountString.toDouble();
-    QString lisaName = ui ->laskentaLengthLineEdit -> text();
-    QString lisaValueString = ui ->laskentaLengthLineEdit -> text();
+    QString lisaName = ui ->laskentaLisatComboBox -> currentText();
+    QString lisaValueString = ui ->laskentaExtraLineEdit -> text();
     double lisaValue = lisaValueString.toDouble();
 
     //creating a new object and adding it to the vector
     addedmaterial* newMaterial = new addedmaterial(name, length, price, amount, lisaName, lisaValue);
-    materials.append(newMaterial);
+    //materials.append(newMaterial);
+
+    materialTableModel -> addMaterial(newMaterial);
 
     qDebug() << "New material added";
 
