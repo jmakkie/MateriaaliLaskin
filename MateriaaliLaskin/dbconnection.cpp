@@ -141,6 +141,66 @@ QString dbconnection::getTableByIndex(int index){ //gets table for sqlite_sequen
 }
 
 // functions for laskenta tab
+double getHourlyPay(dbconnection &dbconn){
+    QSqlQuery qry;
+    QString tunti = "tuntihinta";
+    qry.prepare("SELECT hinta FROM muut WHERE pituus = :tuntihinta;");
+    qry.bindValue(":tuntihinta", tunti);
+
+    //connection check
+    if (!dbconn.db.isOpen()){
+        qDebug() << "Loading hourly pay failed due to database connection";
+        qDebug() << qry.executedQuery();
+    }
+
+    double result = 0;
+    if(qry.exec()){
+        qDebug() << "Success loading hourly pay";
+
+        while (qry.next()) {
+            result = qry.value(0).toDouble();
+        }
+
+        return result;
+
+    } else {
+        qDebug() << "Encountered an error loading hourly pay: " << dbconn.db.lastError();
+        qDebug() << qry.executedQuery();
+
+        return 0;
+    }
+}
+
+double getMoneyFactor(dbconnection &dbconn){
+    QSqlQuery qry;
+    QString raha = "rahakerroin";
+    qry.prepare("SELECT hinta FROM muut WHERE pituus = :rahakerroin;");
+    qry.bindValue(":rahakerroin", raha);
+
+    //connection check
+    if (!dbconn.db.isOpen()){
+        qDebug() << "Loading money factor failed due to database connection";
+        qDebug() << qry.executedQuery();
+    }
+
+    double result = 0;
+    if(qry.exec()){
+        qDebug() << "Success loading money factor";
+
+        while (qry.next()) {
+            result = qry.value(0).toDouble();
+        }
+
+        return result;
+
+    } else {
+        qDebug() << "Encountered an error loading money factor: " << dbconn.db.lastError();
+        qDebug() << qry.executedQuery();
+
+        return 0;
+    }
+}
+
 QString loadLisaValue(dbconnection &dbconn, QString name){
     QSqlQuery qry;
     qry.prepare("SELECT hinta FROM lisat WHERE pituus = :name ;");

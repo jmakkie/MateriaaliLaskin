@@ -42,10 +42,24 @@ private slots:
     void on_pushButton_clicked();
 
 private:
+    // application necessary
     Ui::MainWindow *ui;
     dbconnection dbconn;
     QVector<addedmaterial*> materials;
     materialtablemodel *materialTableModel;
+
+    // numbers for calculation
+    double tuntihinta;
+    double rahakerroin;
+
+    // calculation results
+    double palkka;
+    double urakka;
+    double tunnit;
+    double yht;
+    double kta;
+    double eurosForHour;
+    QString tekija;
 
     //functions for application use
     void firstOpen();

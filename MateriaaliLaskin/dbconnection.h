@@ -12,16 +12,23 @@ class dbconnection
 public:
     dbconnection();
     ~dbconnection();
+
+    // app wide
     QString getDbpath();
     static QString getTableByIndex(int index);
-
-    friend QSqlQueryModel* loadDataToQtableView(dbconnection &dbconn, QString selectedData);
-    friend QSqlQueryModel* loadLisatDataToComboBox(dbconnection &dbconn);
     friend QSqlQueryModel* loadDataToComboBox(dbconnection &dbconn);
-    friend QString loadLisaValue(dbconnection &dbconn, QString name);
+    friend QSqlQueryModel* loadDataToQtableView(dbconnection &dbconn, QString selectedData);
+
+    // values page
     friend QString saveData(dbconnection &dbconn, QString table, QString name, QString value);
     friend QString updateData(dbconnection &dbconn, QString id, QString table, QString name, QString value);
     friend QString deleteData(dbconnection &dbconn, QString id, QString table);
+
+    // calculations page
+    friend QSqlQueryModel* loadLisatDataToComboBox(dbconnection &dbconn);
+    friend double getHourlyPay(dbconnection &dbconn);
+    friend double getMoneyFactor(dbconnection &dbconn);
+    friend QString loadLisaValue(dbconnection &dbconn, QString name);
 
 private:
     QSqlDatabase db;
