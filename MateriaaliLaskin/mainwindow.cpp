@@ -1,3 +1,5 @@
+#include <array>
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "dbconnection.h"
@@ -67,7 +69,54 @@ void MainWindow::updateLaskentaAddedTableView(){
 
 void MainWindow::on_LaskeButton_clicked()   // button function for calculating material costs
 {
-    //implement big maths here
+    // grabs the easier values
+    tekija = ui -> laskentaTekijaLineEdit -> text();
+    tunnit = ui -> laskentaHoursLineEdit -> text().toDouble();
+    rahakerroin = getMoneyFactor(dbconn);
+    tuntihinta = getHourlyPay(dbconn);
+
+    // calculations
+    std::vector<double> calc;
+
+    // for loop for looping thorough materials, calculating them and placing them into the list
+    for (int i = 0; i < materials.size(); i++){
+        // gets values
+        addedmaterial* material = materials.at(i);
+
+        QString name = material -> getName();
+        QString length = material -> getLength();
+        double price = material -> getPrice();
+        double amount = material -> getAmount();
+        QString lisaName = material -> getLisaName();
+        double lisaValue = material -> getLisaValue();
+
+        // calculates gotten values
+        double result = price * amount * rahakerroin * lisaValue;
+
+        // adds result to list
+        calc.push_back(result);
+    }
+    urakka = 0;
+    // calculate contract pay
+    for (std::size_t i = 0; i < calc.size(); i++) {
+        urakka += calc[i];
+    }
+
+    // calculate hourly wage
+    palkka = tuntihinta * tunnit;
+
+    // calculate total
+    yht = urakka - palkka;
+
+    // calculate euros for hour
+    eurosForHour = yht / tunnit;
+
+    // calculate kta
+    kta = tuntihinta + eurosForHour;
+
+    qDebug() << palkka <<  urakka << yht << eurosForHour << kta;
+
+    // change index
     ui->tabWidget->setCurrentIndex(1);
 }
 
