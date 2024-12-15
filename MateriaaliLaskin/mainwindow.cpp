@@ -12,13 +12,13 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    //sets laskentaAddedTableView to use custom model
+    //sets certain tableviews to use custom model
     materialTableModel = new materialtablemodel(&materials, this);
-    ui ->laskentaAddedtableView -> setModel(materialTableModel);
+    ui -> laskentaAddedtableView -> setModel(materialTableModel);
+    ui -> historyMaterialsTableView -> setModel(materialTableModel);
 
     //loads data to tables when first opening the application
     firstOpen();
-
 }
 
 MainWindow::~MainWindow()
@@ -43,8 +43,8 @@ void MainWindow::firstOpen(){
     QSqlQueryModel* model2 = loadDataToComboBox(dbconn);
     QSqlQueryModel* model3 = loadLisatDataToComboBox(dbconn);
 
-    ui->laskentaMaterialsTableView->setModel(model);
-    ui->LaskentaComboBox->setModel(model2);
+    ui -> laskentaMaterialsTableView->setModel(model);
+    ui -> LaskentaComboBox->setModel(model2);
     ui -> laskentaLisatComboBox->setModel(model3);
 }
 
@@ -59,6 +59,33 @@ void MainWindow::comboBoxFunction(int comboIndex, int pageIndex){
 
     if(pageIndex == 2){
         ui ->arvotTableView->setModel(model);
+    }
+}
+
+void MainWindow::on_tabWidget_currentChanged(int index) // function for loading fresh data entries to tables and listview in which ever tab is selected
+{
+    // sets default data to be loaded. implement if statements for checking which tab selected and load specifically those
+    QString selectedData = "lisat";
+
+    // change dbconn to be a passable/global variable
+    //dbconnection dbconn;
+
+    // call functions to provide models
+    QSqlQueryModel* model = loadDataToQtableView(dbconn, selectedData);
+    QSqlQueryModel* model2 = loadDataToComboBox(dbconn);
+
+    if(index == 0){
+        ui->laskentaMaterialsTableView->setModel(model);
+        ui->LaskentaComboBox->setModel(model2);
+    }
+
+    if(index == 1){
+        //put stuff here
+    }
+
+    if(index == 2){
+        ui->arvotTableView->setModel(model);
+        ui->arvotComboBox->setModel(model2);
     }
 }
 
@@ -118,39 +145,15 @@ void MainWindow::on_LaskeButton_clicked()   // button function for calculating m
 
     // change index
     ui->tabWidget->setCurrentIndex(1);
+
+    // call for history setup
+    showCalculations();
 }
 
 // values/arvot page functions
 void MainWindow::on_LaskentaComboBox_activated(int index)
 {
     comboBoxFunction(index, 0);
-}
-
-void MainWindow::on_tabWidget_currentChanged(int index) // function for loading fresh data entries to tables and listview in which ever tab is selected
-{
-    // sets default data to be loaded. implement if statements for checking which tab selected and load specifically those
-    QString selectedData = "lisat";
-
-    // change dbconn to be a passable/global variable
-    //dbconnection dbconn;
-
-    // call functions to provide models
-    QSqlQueryModel* model = loadDataToQtableView(dbconn, selectedData);
-    QSqlQueryModel* model2 = loadDataToComboBox(dbconn);
-
-    if(index == 0){
-        ui->laskentaMaterialsTableView->setModel(model);
-        ui->LaskentaComboBox->setModel(model2);
-    }
-
-    if(index == 1){
-        //put stuff here
-    }
-
-    if(index == 2){
-        ui->arvotTableView->setModel(model);
-        ui->arvotComboBox->setModel(model2);
-    }
 }
 
 void MainWindow::on_arvotTableView_activated(const QModelIndex &index) // function for placing data from table to textEdit
@@ -215,7 +218,7 @@ void MainWindow::on_arvotdeleteButton_clicked() //button functions for deleting 
 {
     // get data to be used in the database entry
     QString table, id;
-    table = dbconnection::getTableByIndex(ui->arvotComboBox->currentIndex());
+    table = ui -> arvotComboBox ->currentText();
     id = ui -> arvotIdLabel -> text();
 
     // add checks if data in name and value are correct format etc.
@@ -240,7 +243,7 @@ void MainWindow::on_arvotUpdateButton_clicked() // button functions for updating
 {
     // get data to be used in the database entry
     QString table, name, value, id;
-    table = dbconnection::getTableByIndex(ui->arvotComboBox->currentIndex());
+    table = ui->arvotComboBox->currentText();
     name = ui -> arvotMateriaaliLineEdit -> text();
     value = ui -> arvothintaLineEdit -> text();
     id = ui -> arvotIdLabel -> text();
@@ -267,7 +270,7 @@ void MainWindow::on_arvotUpdateTable_clicked() //funtion for update table
 {
     // gets currently loaded table
     QString table, id;
-    table = dbconnection::getTableByIndex(ui->arvotComboBox->currentIndex());
+    table = ui -> arvotComboBox -> currentText();
 
     // change dbconn to be a passable/global variable
     //dbconnection dbconn;
@@ -276,8 +279,6 @@ void MainWindow::on_arvotUpdateTable_clicked() //funtion for update table
     QSqlQueryModel* model = loadDataToQtableView(dbconn, table);
     ui->arvotTableView->setModel(model);
 }
-
-
 
 void MainWindow::on_laskentaMaterialsTableView_activated(const QModelIndex &index)
 {
@@ -299,7 +300,6 @@ void MainWindow::on_laskentaMaterialsTableView_activated(const QModelIndex &inde
     ui -> laskentaLengthLineEdit -> setText(length);
     ui -> laskentaPriceLineEdit ->setText(price);
 }
-
 
 void MainWindow::on_laskentaLisatComboBox_activated(int index)
 {
@@ -333,8 +333,29 @@ void MainWindow::on_pushButton_clicked() // button for adding a new material
     ui -> laskentaProductLabel -> clear();
     ui -> laskentaLengthLineEdit -> clear();
     ui -> laskentaAmountlineEdit -> clear();
-    ui -> laskentaExtraLineEdit -> clear();
     ui -> laskentaPriceLineEdit -> clear();
 
     updateLaskentaAddedTableView();
+}
+
+// history window functions
+void MainWindow::showCalculations(){
+    // doubles to strings
+    QString palkkaString = QString::number(palkka);
+    QString eurosForsHourString = QString::number(eurosForHour);
+    QString yhtString = QString::number(yht);
+    QString ktaString = QString::number(kta);
+    QString tunnitString = QString::number(tunnit);
+    QString urakkaString = QString::number(urakka);
+
+    // slap it on screen
+    ui -> historyPalkkaLabel -> setText(palkkaString);
+    ui -> historyEurosForHourLabel ->setText(eurosForsHourString);
+    ui -> historyKtaLabel -> setText(ktaString);
+    ui -> historyTekijaLabel -> setText(tekija);
+    ui -> historyTunnitLabel -> setText(tunnitString);
+    ui -> historyYhtLabel -> setText(yhtString);
+    ui -> historyUrakkaLabel -> setText(urakkaString);
+
+    // used materials to screen
 }
