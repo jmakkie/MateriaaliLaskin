@@ -65,8 +65,11 @@ private:
     void firstOpen();
     void comboBoxFunction(int comboIndex, int pageIndex);
 
-    //functions for laske/calculate/mainwindow
+    // functions for laske/calculate/mainwindow
     void updateLaskentaAddedTableView();
+
+    // functions for history
+    void showCalculations();
 
 
 };
