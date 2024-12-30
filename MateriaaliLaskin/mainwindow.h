@@ -41,6 +41,10 @@ private slots:
     void on_arvotUpdateTable_clicked();
     void on_pushButton_clicked();
 
+    void on_pushButton_2_clicked();
+
+    void on_laskentaAddedtableView_activated(const QModelIndex &index);
+
 private:
     // application necessary
     Ui::MainWindow *ui;
@@ -60,6 +64,7 @@ private:
     double kta;
     double eurosForHour;
     QString tekija;
+    int rowNum;
 
     //functions for application use
     void firstOpen();
@@ -70,6 +75,7 @@ private:
 
     // functions for history
     void showCalculations();
+
 
 
 };
