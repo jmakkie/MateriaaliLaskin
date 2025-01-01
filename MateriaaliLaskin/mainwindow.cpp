@@ -12,8 +12,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     //sets certain tableviews to use custom model
     materialTableModel = new materialtablemodel(&materials, this);
+    workersTableModel = new workerstablemodel(&worker, this);
     ui -> laskentaAddedtableView -> setModel(materialTableModel);
     ui -> historyMaterialsTableView -> setModel(materialTableModel);
+    ui -> laskentaTekjiatTablet -> setModel(workersTableModel);
 
     //loads data to tables when first opening the application
     firstOpen();
@@ -26,6 +28,10 @@ MainWindow::~MainWindow()
     // clean up classes
     for (addedmaterial* material : materials){
         delete material;
+    }
+
+    for (workers* worker1 : worker) {
+        delete worker1;
     }
 }
 
@@ -404,3 +410,19 @@ void MainWindow::on_laskentaAddedtableView_activated(const QModelIndex &index) /
     }
 }
 
+
+void MainWindow::on_pushButton_3_clicked()
+{
+    QString worker2 = ui -> laskentaTekijaLineEdit -> text();
+    double hours = ui -> laskentaHoursLineEdit -> text().toDouble();
+
+    workers* newWorker = new workers(worker2, hours);
+
+    workersTableModel -> addWorker(newWorker);
+
+    qDebug() << "New worker added";
+
+    for (workers* worker1 : worker) {
+        qDebug() << worker1 ->getWorker();
+    }
+}
