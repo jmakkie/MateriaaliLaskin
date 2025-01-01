@@ -15,13 +15,17 @@ SOURCES += \
     dbconnection.cpp \
     main.cpp \
     mainwindow.cpp \
-    materialtablemodel.cpp
+    materialtablemodel.cpp \
+    workers.cpp \
+    workerstablemodel.cpp
 
 HEADERS += \
     addedmaterial.h \
     dbconnection.h \
     mainwindow.h \
-    materialtablemodel.h
+    materialtablemodel.h \
+    workers.h \
+    workerstablemodel.h
 
 FORMS += \
     mainwindow.ui

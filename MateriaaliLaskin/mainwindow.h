@@ -5,6 +5,8 @@
 #include "dbconnection.h"
 #include "addedmaterial.h"
 #include "materialtablemodel.h"
+#include "workerstablemodel.h"
+#include "workers.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -45,12 +47,16 @@ private slots:
 
     void on_laskentaAddedtableView_activated(const QModelIndex &index);
 
+    void on_pushButton_3_clicked();
+
 private:
     // application necessary
     Ui::MainWindow *ui;
     dbconnection dbconn;
     QVector<addedmaterial*> materials;
+    QVector<workers*> worker;
     materialtablemodel *materialTableModel;
+    workerstablemodel *workersTableModel;
 
     // numbers for calculation
     double tuntihinta;
