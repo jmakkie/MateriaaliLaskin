@@ -1,7 +1,7 @@
 #include "workers.h"
 
 workers::workers(QString worker, double hours)
-        : worker(worker), hours(hours)
+    : worker(worker), hours(hours)
 {}
 
 // getters

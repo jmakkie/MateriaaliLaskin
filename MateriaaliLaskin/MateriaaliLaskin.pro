@@ -12,19 +12,23 @@ CONFIG += c++17
 
 SOURCES += \
     addedmaterial.cpp \
+    calculatedtablemodel.cpp \
     dbconnection.cpp \
     main.cpp \
     mainwindow.cpp \
     materialtablemodel.cpp \
     workers.cpp \
+    workerscalculated.cpp \
     workerstablemodel.cpp
 
 HEADERS += \
     addedmaterial.h \
+    calculatedtablemodel.h \
     dbconnection.h \
     mainwindow.h \
     materialtablemodel.h \
     workers.h \
+    workerscalculated.h \
     workerstablemodel.h
 
 FORMS += \

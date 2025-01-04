@@ -13,9 +13,12 @@ MainWindow::MainWindow(QWidget *parent)
     //sets certain tableviews to use custom model
     materialTableModel = new materialtablemodel(&materials, this);
     workersTableModel = new workerstablemodel(&worker, this);
+    calculatedTableModel = new calculatedtablemodel(&workersC, this);
+
     ui -> laskentaAddedtableView -> setModel(materialTableModel);
     ui -> historyMaterialsTableView -> setModel(materialTableModel);
     ui -> laskentaTekjiatTablet -> setModel(workersTableModel);
+    ui -> historyWorkersTableView -> setModel(calculatedTableModel);
 
     //loads data to tables when first opening the application
     firstOpen();
@@ -31,6 +34,10 @@ MainWindow::~MainWindow()
     }
 
     for (workers* worker1 : worker) {
+        delete worker1;
+    }
+
+    for (workersCalculated* worker1 : workersC){
         delete worker1;
     }
 }
@@ -101,8 +108,6 @@ void MainWindow::updateLaskentaAddedTableView(){
 void MainWindow::on_LaskeButton_clicked()   // button function for calculating material costs
 {
     // grabs the easier values
-    tekija = ui -> laskentaTekijaLineEdit -> text();
-    tunnit = ui -> laskentaHoursLineEdit -> text().toDouble();
     rahakerroin = getMoneyFactor(dbconn);
     tuntihinta = getHourlyPay(dbconn);
 
@@ -122,30 +127,74 @@ void MainWindow::on_LaskeButton_clicked()   // button function for calculating m
         double lisaValue = material -> getLisaValue();
 
         // calculates gotten values
-        double result = price * amount * rahakerroin * lisaValue;
+        double result = price * amount* rahakerroin * lisaValue;
 
         // adds result to list
         calc.push_back(result);
     }
+
     urakka = 0;
     // calculate contract pay
     for (std::size_t i = 0; i < calc.size(); i++) {
         urakka += calc[i];
     }
 
-    // calculate hourly wage
-    palkka = tuntihinta * tunnit;
+    // calculate hourly wage for worker and place worker into qvector
+
+    for (int i = 0; i < worker.size(); i++){
+        // get values
+        workers* worker1 = worker.at(i);
+
+        QString name = worker1 -> getWorker();
+        double hours = worker1 -> getHours();
+        double salary = 0;
+        double toPayment = 0;
+
+        // calculate
+        salary = tuntihinta * hours;
+
+        // add workers to Qvector
+        workersCalculated* newWorker = new workersCalculated(name, hours, salary, toPayment);
+        calculatedTableModel -> addWorker(newWorker);
+    }
+
+    // calculate hours for all workers
+    for (int i = 0; i < workersC.size(); i++) {
+        // get hours and add them together
+        workersCalculated* worker1 = workersC.at(i);
+        yhteisetTunnit += worker1 -> getHours();
+    }
+
+    // calculate total pay for all workers
+    for (int i = 0; i < workersC.size(); i++){
+        // get salaries and add them together
+        workersCalculated* worker1 = workersC.at(i);
+        yhteinenPalkka += worker1 -> getSalary();
+    }
 
     // calculate total
-    yht = urakka - palkka;
+    yht = urakka - yhteinenPalkka;
 
     // calculate euros for hour
-    eurosForHour = yht / tunnit;
+    eurosForHour = yht / yhteisetTunnit;
+
+    //calculate to payment for all workers
+    for (int i = 0; i < workersC.size(); i++) {
+        // get value
+        workersCalculated* worker1 = workersC.at(i);
+        double toPayment = worker1 -> getToPayment();
+        double hours = worker1 ->getHours();
+
+        // calculate it
+        toPayment = eurosForHour * hours;
+
+        worker1 ->setToPayment(toPayment);
+    }
 
     // calculate kta
     kta = tuntihinta + eurosForHour;
 
-    qDebug() << palkka <<  urakka << yht << eurosForHour << kta;
+    qDebug() << yhteinenPalkka <<  urakka << yht << eurosForHour << kta;
 
     // change index
     ui->tabWidget->setCurrentIndex(1);
@@ -345,21 +394,18 @@ void MainWindow::on_pushButton_clicked() // button for adding a new material
 // history window functions
 void MainWindow::showCalculations(){
     // doubles to strings
-    QString palkkaString = QString::number(palkka);
     QString eurosForsHourString = QString::number(eurosForHour);
     QString yhtString = QString::number(yht);
     QString ktaString = QString::number(kta);
-    QString tunnitString = QString::number(tunnit);
     QString urakkaString = QString::number(urakka);
+    QString yhteinenPalkkaString = QString::number(yhteinenPalkka);
 
     // slap it on screen
-    ui -> historyPalkkaLabel -> setText(palkkaString);
     ui -> historyEurosForHourLabel ->setText(eurosForsHourString);
     ui -> historyKtaLabel -> setText(ktaString);
-    ui -> historyTekijaLabel -> setText(tekija);
-    ui -> historyTunnitLabel -> setText(tunnitString);
     ui -> historyYhtLabel -> setText(yhtString);
     ui -> historyUrakkaLabel -> setText(urakkaString);
+    ui -> historyPalkkaLabel -> setText(yhteinenPalkkaString);
 
     // used materials to screen
 }
