@@ -15,7 +15,7 @@ int workerstablemodel::rowCount(const QModelIndex &parent) const {
 int workerstablemodel::columnCount(const QModelIndex &parent) const {
     if (parent.isValid())
         return 0;
-    return 6;
+    return 4;
 }
 
 QVariant workerstablemodel::data(const QModelIndex &index, int role) const {

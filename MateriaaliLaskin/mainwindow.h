@@ -6,7 +6,7 @@
 #include "addedmaterial.h"
 #include "materialtablemodel.h"
 #include "workerstablemodel.h"
-#include "workers.h"
+#include "calculatedtablemodel.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -42,11 +42,8 @@ private slots:
     void on_arvotUpdateButton_clicked();
     void on_arvotUpdateTable_clicked();
     void on_pushButton_clicked();
-
     void on_pushButton_2_clicked();
-
     void on_laskentaAddedtableView_activated(const QModelIndex &index);
-
     void on_pushButton_3_clicked();
 
 private:
@@ -55,22 +52,25 @@ private:
     dbconnection dbconn;
     QVector<addedmaterial*> materials;
     QVector<workers*> worker;
+    QVector<workersCalculated*> workersC;
+
+    // table models
     materialtablemodel *materialTableModel;
     workerstablemodel *workersTableModel;
+    calculatedtablemodel *calculatedTableModel;
 
     // numbers for calculation
     double tuntihinta;
     double rahakerroin;
 
     // calculation results
-    double palkka;
-    double urakka;
-    double tunnit;
-    double yht;
-    double kta;
-    double eurosForHour;
-    QString tekija;
-    int rowNum;
+    double urakka = 0;
+    double yht = 0;
+    double kta = 0;
+    double eurosForHour = 0;
+    double yhteisetTunnit = 0;
+    double yhteinenPalkka = 0;
+    int rowNum = 0;
 
     //functions for application use
     void firstOpen();
