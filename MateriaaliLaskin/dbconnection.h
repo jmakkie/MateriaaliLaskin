@@ -15,7 +15,6 @@ public:
 
     // app wide
     QString getDbpath();
-    static QString getTableByIndex(int index);
     friend QSqlQueryModel* loadDataToComboBox(dbconnection &dbconn);
     friend QSqlQueryModel* loadDataToQtableView(dbconnection &dbconn, QString selectedData);
 

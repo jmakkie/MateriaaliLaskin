@@ -59,20 +59,6 @@ void MainWindow::firstOpen(){
     ui -> laskentaLisatComboBox->setModel(model3);
 }
 
-void MainWindow::comboBoxFunction(int comboIndex, int pageIndex){
-    QString selectedData = dbconnection::getTableByIndex(comboIndex);
-
-    // query and model to show
-    QSqlQueryModel* model = loadDataToQtableView(dbconn, selectedData);
-    if(pageIndex == 0){
-        ui ->laskentaMaterialsTableView->setModel(model);
-    }
-
-    if(pageIndex == 2){
-        ui ->arvotTableView->setModel(model);
-    }
-}
-
 void MainWindow::on_tabWidget_currentChanged(int index) // function for loading fresh data entries to tables and listview in which ever tab is selected
 {
     // sets default data to be loaded. implement if statements for checking which tab selected and load specifically those
@@ -206,7 +192,10 @@ void MainWindow::on_LaskeButton_clicked()   // button function for calculating m
 // values/arvot page functions
 void MainWindow::on_LaskentaComboBox_activated(int index)
 {
-    comboBoxFunction(index, 0);
+    QString selectedData = ui -> LaskentaComboBox -> currentText();
+    QSqlQueryModel* model = loadDataToQtableView(dbconn, selectedData);
+    ui ->laskentaMaterialsTableView->setModel(model);
+    //comboBoxFunction(index, 0);
 }
 
 void MainWindow::on_arvotTableView_activated(const QModelIndex &index) // function for placing data from table to textEdit
@@ -233,7 +222,11 @@ void MainWindow::on_arvotTableView_activated(const QModelIndex &index) // functi
 
 void MainWindow::on_arvotComboBox_currentIndexChanged(int index) // function for loading data for selected table
 {
-    comboBoxFunction(index, 2);
+    QString selectedData = ui ->  arvotComboBox -> currentText();
+    QSqlQueryModel* model = loadDataToQtableView(dbconn, selectedData);
+    ui ->arvotTableView->setModel(model);
+
+    //comboBoxFunction(index, 2);
 }
 
 void MainWindow::on_arvotAddNewButton_clicked() // button function for adding new entries to database
