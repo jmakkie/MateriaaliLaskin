@@ -189,7 +189,67 @@ void MainWindow::on_LaskeButton_clicked()   // button function for calculating m
     showCalculations();
 }
 
-// values/arvot page functions
+void MainWindow::on_laskentaAddedtableView_activated(const QModelIndex &index) // display selected material in fields
+{
+    int row = index.row();
+    rowNum = row;
+
+    if (row >= 0 && row < materials.size()) {
+        addedmaterial* selectedMaterial = materials.at(row);
+
+        ui -> laskentaProductLabel -> setText(selectedMaterial -> getName());
+        double amount = selectedMaterial -> getAmount();
+        ui -> laskentaAmountlineEdit -> setText(QString::number(amount));
+        ui -> laskentaLengthLineEdit -> setText(selectedMaterial -> getLength());
+        ui -> laskentaLisatComboBox -> setCurrentText(selectedMaterial -> getLisaName());
+        double lisaValue = selectedMaterial -> getLisaValue();
+        ui -> laskentaExtraLineEdit -> setText(QString::number(lisaValue));
+        double price = selectedMaterial ->getPrice();
+        ui ->laskentaPriceLineEdit -> setText(QString::number(price));
+    }
+}
+
+void MainWindow::on_pushButton_3_clicked() // function for adding new workers
+{
+    QString worker2 = ui -> laskentaTekijaLineEdit -> text();
+    double hours = ui -> laskentaHoursLineEdit -> text().toDouble();
+
+    workers* newWorker = new workers(worker2, hours);
+
+    workersTableModel -> addWorker(newWorker);
+
+    qDebug() << "New worker added";
+
+    for (workers* worker1 : worker) {
+        qDebug() << worker1 ->getWorker();
+    }
+}
+
+void MainWindow::on_pushButton_2_clicked() // update added material
+{
+    addedmaterial* selectedMaterial = materials.at(rowNum);
+
+    //updates materials in QVector with values from fields
+    selectedMaterial -> setName(ui -> laskentaProductLabel -> text());
+    selectedMaterial -> setLength(ui -> laskentaLengthLineEdit -> text());
+    QString string = ui -> laskentaPriceLineEdit -> text();
+    double num = string.toDouble();
+    selectedMaterial -> setPrice(num);
+    string = ui -> laskentaAmountlineEdit -> text();
+    num = string.toDouble();
+    selectedMaterial -> setAmount(num);
+    selectedMaterial -> setLisaName(ui -> laskentaLisatComboBox -> currentText());
+    string = ui -> laskentaExtraLineEdit -> text();
+    num = string.toDouble();
+    selectedMaterial -> setLisaValue(num);
+
+    //update table
+
+    QModelIndex topLeft = materialTableModel->index(rowNum, 0);
+    QModelIndex bottomRight = materialTableModel->index(rowNum, materialTableModel->columnCount() - 1);
+    emit materialTableModel->dataChanged(topLeft, bottomRight);
+}
+
 void MainWindow::on_LaskentaComboBox_activated(int index)
 {
     QString selectedData = ui -> LaskentaComboBox -> currentText();
@@ -198,6 +258,7 @@ void MainWindow::on_LaskentaComboBox_activated(int index)
     //comboBoxFunction(index, 0);
 }
 
+// values/arvot page functions
 void MainWindow::on_arvotTableView_activated(const QModelIndex &index) // function for placing data from table to textEdit
 {
     // use index to get row of table
@@ -401,67 +462,4 @@ void MainWindow::showCalculations(){
     ui -> historyPalkkaLabel -> setText(yhteinenPalkkaString);
 
     // used materials to screen
-}
-
-void MainWindow::on_pushButton_2_clicked() // update added material
-{
-    addedmaterial* selectedMaterial = materials.at(rowNum);
-
-    //updates materials in QVector with values from fields
-    selectedMaterial -> setName(ui -> laskentaProductLabel -> text());
-    selectedMaterial -> setLength(ui -> laskentaLengthLineEdit -> text());
-    QString string = ui -> laskentaPriceLineEdit -> text();
-    double num = string.toDouble();
-    selectedMaterial -> setPrice(num);
-    string = ui -> laskentaAmountlineEdit -> text();
-    num = string.toDouble();
-    selectedMaterial -> setAmount(num);
-    selectedMaterial -> setLisaName(ui -> laskentaLisatComboBox -> currentText());
-    string = ui -> laskentaExtraLineEdit -> text();
-    num = string.toDouble();
-    selectedMaterial -> setLisaValue(num);
-
-    //update table
-
-    QModelIndex topLeft = materialTableModel->index(rowNum, 0);
-    QModelIndex bottomRight = materialTableModel->index(rowNum, materialTableModel->columnCount() - 1);
-    emit materialTableModel->dataChanged(topLeft, bottomRight);
-}
-
-
-void MainWindow::on_laskentaAddedtableView_activated(const QModelIndex &index) // display selected material in fields
-{
-    int row = index.row();
-    rowNum = row;
-
-    if (row >= 0 && row < materials.size()) {
-        addedmaterial* selectedMaterial = materials.at(row);
-
-        ui -> laskentaProductLabel -> setText(selectedMaterial -> getName());
-        double amount = selectedMaterial -> getAmount();
-        ui -> laskentaAmountlineEdit -> setText(QString::number(amount));
-        ui -> laskentaLengthLineEdit -> setText(selectedMaterial -> getLength());
-        ui -> laskentaLisatComboBox -> setCurrentText(selectedMaterial -> getLisaName());
-        double lisaValue = selectedMaterial -> getLisaValue();
-        ui -> laskentaExtraLineEdit -> setText(QString::number(lisaValue));
-        double price = selectedMaterial ->getPrice();
-        ui ->laskentaPriceLineEdit -> setText(QString::number(price));
-    }
-}
-
-
-void MainWindow::on_pushButton_3_clicked()
-{
-    QString worker2 = ui -> laskentaTekijaLineEdit -> text();
-    double hours = ui -> laskentaHoursLineEdit -> text().toDouble();
-
-    workers* newWorker = new workers(worker2, hours);
-
-    workersTableModel -> addWorker(newWorker);
-
-    qDebug() << "New worker added";
-
-    for (workers* worker1 : worker) {
-        qDebug() << worker1 ->getWorker();
-    }
 }

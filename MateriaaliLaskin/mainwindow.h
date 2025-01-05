@@ -33,6 +33,10 @@ private slots:
     void on_LaskentaComboBox_activated(int index);
     void on_laskentaMaterialsTableView_activated(const QModelIndex &index);
     void on_laskentaLisatComboBox_activated(int index);
+    void on_pushButton_clicked();
+    void on_pushButton_2_clicked();
+    void on_laskentaAddedtableView_activated(const QModelIndex &index);
+    void on_pushButton_3_clicked();
 
     // for history/laskelmat use
 
@@ -43,15 +47,12 @@ private slots:
     void on_arvotdeleteButton_clicked();
     void on_arvotUpdateButton_clicked();
     void on_arvotUpdateTable_clicked();
-    void on_pushButton_clicked();
-    void on_pushButton_2_clicked();
-    void on_laskentaAddedtableView_activated(const QModelIndex &index);
-    void on_pushButton_3_clicked();
 
 private:
     // application necessary
     Ui::MainWindow *ui;
     dbconnection dbconn;
+
     QVector<addedmaterial*> materials;
     QVector<workers*> worker;
     QVector<workersCalculated*> workersC;
@@ -62,8 +63,8 @@ private:
     calculatedtablemodel *calculatedTableModel;
 
     // numbers for calculation
-    double tuntihinta;
-    double rahakerroin;
+    double tuntihinta = 0;
+    double rahakerroin = 0;
 
     // calculation results
     double urakka = 0;
@@ -80,7 +81,7 @@ private:
     // functions for laske/calculate/mainwindow
     void updateLaskentaAddedTableView();
 
-    // functions for history
+    // functions for history/laskelma
     void showCalculations();
 
 
