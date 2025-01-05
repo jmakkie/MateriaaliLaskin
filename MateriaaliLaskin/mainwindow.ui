@@ -19,6 +19,9 @@
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <widget class="QTabWidget" name="tabWidget">
+        <property name="toolTip">
+         <string/>
+        </property>
         <property name="tabPosition">
          <enum>QTabWidget::TabPosition::North</enum>
         </property>
@@ -26,7 +29,7 @@
          <enum>QTabWidget::TabShape::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tab">
          <attribute name="title">
@@ -43,6 +46,9 @@
             <width>411</width>
             <height>24</height>
            </rect>
+          </property>
+          <property name="toolTip">
+           <string>Materiaali valinta</string>
           </property>
           <property name="editable">
            <bool>true</bool>
@@ -66,6 +72,9 @@
             <width>161</width>
             <height>24</height>
            </rect>
+          </property>
+          <property name="toolTip">
+           <string>Laske palkka ja materiaalikulut</string>
           </property>
           <property name="text">
            <string>Laske</string>
@@ -191,6 +200,9 @@
             <height>24</height>
            </rect>
           </property>
+          <property name="toolTip">
+           <string>Lisää materiaali</string>
+          </property>
           <property name="text">
            <string>Lisää</string>
           </property>
@@ -203,6 +215,9 @@
             <width>71</width>
             <height>24</height>
            </rect>
+          </property>
+          <property name="toolTip">
+           <string>Päivitä Materiaali</string>
           </property>
           <property name="text">
            <string>Päivitä</string>
@@ -334,6 +349,9 @@
             <width>71</width>
             <height>21</height>
            </rect>
+          </property>
+          <property name="toolTip">
+           <string>Lisää työntekijä</string>
           </property>
           <property name="text">
            <string>add worker</string>
@@ -540,6 +558,9 @@
             <height>24</height>
            </rect>
           </property>
+          <property name="toolTip">
+           <string>Poista Materiaali</string>
+          </property>
           <property name="text">
            <string>Delete</string>
           </property>
@@ -552,6 +573,9 @@
             <width>80</width>
             <height>24</height>
            </rect>
+          </property>
+          <property name="toolTip">
+           <string>Lisää uusi materiaali</string>
           </property>
           <property name="text">
            <string>Add new</string>
@@ -622,6 +646,9 @@
             <height>24</height>
            </rect>
           </property>
+          <property name="toolTip">
+           <string>Päivitä materiaali</string>
+          </property>
           <property name="text">
            <string>Update/Save changes</string>
           </property>
@@ -634,6 +661,9 @@
             <width>341</width>
             <height>24</height>
            </rect>
+          </property>
+          <property name="toolTip">
+           <string>Valitse materiaali</string>
           </property>
           <property name="editable">
            <bool>true</bool>

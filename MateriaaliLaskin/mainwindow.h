@@ -34,6 +34,8 @@ private slots:
     void on_laskentaMaterialsTableView_activated(const QModelIndex &index);
     void on_laskentaLisatComboBox_activated(int index);
 
+    // for history/laskelmat use
+
     // for values/arvot
     void on_arvotComboBox_currentIndexChanged(int index);
     void on_arvotTableView_activated(const QModelIndex &index);
@@ -74,7 +76,6 @@ private:
 
     //functions for application use
     void firstOpen();
-    void comboBoxFunction(int comboIndex, int pageIndex);
 
     // functions for laske/calculate/mainwindow
     void updateLaskentaAddedTableView();

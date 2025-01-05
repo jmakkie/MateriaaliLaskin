@@ -88,58 +88,6 @@ QSqlQueryModel* loadDataToComboBox(dbconnection &dbconn) //func to get table nam
     return model;
 }
 
-QString dbconnection::getTableByIndex(int index){ //gets table for sqlite_sequence which has no id
-    // set selectedData for query. change to be better later
-    QString selectedData = "lisat";
-    switch(index)
-    {
-    case 0:
-        selectedData = "kourut";
-        break;
-    case 1:
-        selectedData = "kourut_3cm_muovi";
-        break;
-    case 2:
-        selectedData = "kourut_4cm_muovi";
-        break;
-    case 3:
-        selectedData = "kourut_5cm_muovi";
-        break;
-    case 4:
-        selectedData = "kumi_13mm";
-        break;
-    case 5:
-        selectedData = "kumi_19mm";
-        break;
-    case 6:
-        selectedData = "kumitus_iv_huone";
-        break;
-    case 7:
-        selectedData = "kumitus_letkulla";
-        break;
-    case 8:
-        selectedData = "lisat";
-        break;
-    case 9:
-        selectedData = "muut";
-        break;
-    case 10:
-        selectedData = "t_haarat_3cm";
-        break;
-    case 11:
-        selectedData = "t_haarat_4cm";
-        break;
-    case 12:
-        selectedData = "t_haarat_5cm";
-        break;
-    case 13:
-        selectedData = "tuuletukset";
-        break;
-    };
-
-    return selectedData;
-}
-
 // functions for laskenta tab
 double getHourlyPay(dbconnection &dbconn){
     QSqlQuery qry;
