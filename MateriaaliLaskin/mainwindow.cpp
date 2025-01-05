@@ -57,6 +57,14 @@ void MainWindow::firstOpen(){
     ui -> laskentaMaterialsTableView->setModel(model);
     ui -> LaskentaComboBox->setModel(model2);
     ui -> laskentaLisatComboBox->setModel(model3);
+
+    // set tableviews to stretch
+    ui -> laskentaMaterialsTableView -> horizontalHeader() -> setStretchLastSection(true);
+    ui -> laskentaAddedtableView -> horizontalHeader() -> setStretchLastSection(true);
+    ui -> laskentaTekjiatTablet -> horizontalHeader() -> setStretchLastSection(true);
+    ui -> historyMaterialsTableView -> horizontalHeader() -> setStretchLastSection(true);
+    ui -> historyWorkersTableView -> horizontalHeader() -> setStretchLastSection(true);
+    ui -> arvotTableView -> horizontalHeader() -> setStretchLastSection(true);
 }
 
 void MainWindow::on_tabWidget_currentChanged(int index) // function for loading fresh data entries to tables and listview in which ever tab is selected
@@ -258,6 +266,34 @@ void MainWindow::on_LaskentaComboBox_activated(int index)
     //comboBoxFunction(index, 0);
 }
 
+void MainWindow::on_laskentaMaterialsTableView_activated(const QModelIndex &index)
+{
+    // use index to get row of table
+    int selectedRow = index.row();
+    QAbstractItemModel *model = ui -> laskentaMaterialsTableView -> model();
+
+    // pull data from said row
+    QString name = ui -> LaskentaComboBox -> currentText();
+    QVariant variantLength = model -> data(model -> index(selectedRow, 1));
+    QVariant variantPrice = model -> data(model -> index(selectedRow, 2));
+    QString length = variantLength.toString();
+    QString price = variantPrice.toString();
+
+    // todo (again..) fucking , and .
+
+    // slap that data to screen
+    ui -> laskentaProductLabel -> setText(name);
+    ui -> laskentaLengthLineEdit -> setText(length);
+    ui -> laskentaPriceLineEdit ->setText(price);
+}
+
+void MainWindow::on_laskentaLisatComboBox_activated(int index)
+{
+    QString selectedData = ui -> laskentaLisatComboBox ->currentText();
+    QString result = loadLisaValue(dbconn, selectedData);
+    ui -> laskentaExtraLineEdit ->setText(result);
+}
+
 // values/arvot page functions
 void MainWindow::on_arvotTableView_activated(const QModelIndex &index) // function for placing data from table to textEdit
 {
@@ -385,34 +421,6 @@ void MainWindow::on_arvotUpdateTable_clicked() //funtion for update table
     // call functions to provide models
     QSqlQueryModel* model = loadDataToQtableView(dbconn, table);
     ui->arvotTableView->setModel(model);
-}
-
-void MainWindow::on_laskentaMaterialsTableView_activated(const QModelIndex &index)
-{
-    // use index to get row of table
-    int selectedRow = index.row();
-    QAbstractItemModel *model = ui -> laskentaMaterialsTableView -> model();
-
-    // pull data from said row
-    QString name = ui -> LaskentaComboBox -> currentText();
-    QVariant variantLength = model -> data(model -> index(selectedRow, 1));
-    QVariant variantPrice = model -> data(model -> index(selectedRow, 2));
-    QString length = variantLength.toString();
-    QString price = variantPrice.toString();
-
-    // todo (again..) fucking , and .
-
-    // slap that data to screen
-    ui -> laskentaProductLabel -> setText(name);
-    ui -> laskentaLengthLineEdit -> setText(length);
-    ui -> laskentaPriceLineEdit ->setText(price);
-}
-
-void MainWindow::on_laskentaLisatComboBox_activated(int index)
-{
-    QString selectedData = ui -> laskentaLisatComboBox ->currentText();
-    QString result = loadLisaValue(dbconn, selectedData);
-    ui -> laskentaExtraLineEdit ->setText(result);
 }
 
 void MainWindow::on_pushButton_clicked() // button for adding a new material
