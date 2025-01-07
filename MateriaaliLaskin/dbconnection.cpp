@@ -4,8 +4,6 @@ dbconnection::dbconnection()
 {
     // setting path to database file
     path =QDir::currentPath();
-    int pos = path.lastIndexOf(QString("/b"));
-    path = path.left(pos);
     path += "/database/MateriaaliLaskindb.db";
 
     // db connecting
